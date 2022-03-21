@@ -3,7 +3,7 @@
 
 ## Project Goals
 - [X] Create a basic web app with Express.js
-- [ ] Manage a request lifecycle with Middleware
+- [X] Manage a request lifecycle with Middleware
 - [ ] Json Web Token (JWT) usage with Express.js
 
 
@@ -56,4 +56,107 @@ app.get("/products",(req,res) => {
 });
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 ```
+## Manage a request lifecycle with middleware
 
+The Express Framework has built-in support for handling a request in this way.
+
+Add the following code to app.js
+
+```
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => res.send('Hello World!'))
+
+app.get('/users',(req,res) => {
+  res.json([{
+    id: 1,
+    name: 'User Userson'
+  }])
+})
+
+app.get('/products', (req, res) => {
+  res.json([{
+    id: 1,
+    name: 'The Bluest Eye'
+  }])
+})
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+```
+Create a new file is client.js. Add the following code to client.js
+```
+const http = require('http');
+
+http.get({
+  port: 3000,
+  hostname: 'localhost',
+  path: '/users',
+  headers: {}
+}, (res) => {
+  console.log("connected");
+  res.on("data", (chunk) => {
+    console.log("chunk", "" + chunk);
+  });
+  res.on("end", () => {
+    console.log("No more data");
+  });
+  res.on("close", () => {
+    console.log("Closing connection");
+  });
+});
+```
+
+Run app.js with ``` node app.js ``` command in terminal.
+
+After that command that run command.
+
+Run client.js``` node client.js ``` command in terminal.
+
+
+The terminal should look like this.
+
+For app.js
+
+```
+Example app listening on port 3000!
+```
+For client.js
+```
+connected
+chunk [{"id":1,"name":"User Userson"}]
+No more data
+Closing connection
+```
+That from step later open app.js. After the row ```const app = express()```. Add the following code.
+
+```
+function isAuthorized(req,res, next) {
+    const auth = req.headers.authorization;
+    if (auth === 'secretPassword') {
+      next();
+    } else {
+      res.status(401);
+      res.send('Not permitted');
+    }
+  }
+```
+Locate that part of the code.
+```
+app.get('/users', (req,res) => {
+  res.json([{
+    id: 1,
+    name: 'User Userson'
+  }])
+})
+```
+Replace part of the code
+```
+app.get('/users',isAuthorized, (req,res) => {
+  res.json([{
+    id: 1,
+    name: 'User Userson'
+  }])
+})
+```
