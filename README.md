@@ -12,7 +12,7 @@
 * Create a file app.js
 * Go to terminal, and enter 'npm init -y'. This command creates a default package.json file for your node.Js project.
 * In the terminal, enter 'npm install express'. This command installs the Express Framework.
-* Open the package.sjon. In the dependencies section, there is an express entry. This entry means that Express Framework is isntalled.
+* Open the package.json. In the dependencies section, there is an express entry. This entry means that Express Framework is isntalled.
 
 ## Create a web app that return JSON data
 Add the following code to app.js
